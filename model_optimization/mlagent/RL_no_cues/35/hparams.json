@@ -1,0 +1,1 @@
+{"reservoir_size": 1000, "spectral_radius": 0.634665991924547, "noise_rc": 0.0, "leak_rate": 0.06512336762731123, "seed": 1234, "warmup": 800, "ridge": 1.1482073199973176e-06, "rc_connectivity": 0.008290547911991604, "input_connectivity": 0.2}

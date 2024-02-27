@@ -1,0 +1,15 @@
+artifact_uri: model_optimization/mlflows/RL_no_cues_2/1/0dad78daa5094b52be3c91c900836b97/artifacts
+end_time: 1708437421218
+entry_point_name: ''
+experiment_id: '1'
+lifecycle_stage: active
+name: ''
+run_id: 0dad78daa5094b52be3c91c900836b97
+run_uuid: 0dad78daa5094b52be3c91c900836b97
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1708437417565
+status: 3
+tags: []
+user_id: nchaix

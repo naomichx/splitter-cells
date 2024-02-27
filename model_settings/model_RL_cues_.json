@@ -1,0 +1,14 @@
+{"cues": 1,
+  "seed" : 1234,
+"n_units": 1000,
+"leak_rate":0.1,
+"spectral_radius":  1.5,
+"input_scaling": [1,1,1,1,1,1,1,1,10,10],
+"regularization":0.006,
+"input_connectivity": 0.09,
+"connectivity": 0.19,
+"noise_rc":0,
+"warmup":800,
+  "nb_train": 7500
+
+}
