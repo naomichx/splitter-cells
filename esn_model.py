@@ -4,9 +4,7 @@ from reservoirpy.nodes import Reservoir, Ridge, Input, RLS
 from reservoirpy.observables import nrmse, rsquare
 import os, json
 import numpy as np
-from sklearn.metrics import accuracy_score
-from sklearn import svm, metrics
-import pickle
+
 
 
 def split_train_test(input, output, nb_train, max_len_test=100000):

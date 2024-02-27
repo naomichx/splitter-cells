@@ -1,24 +1,30 @@
 # splitter-cells: source code and data file for running the 8-maze navigation task and proceed to the reservoir state analysis 
 
 
-This repository contains the necessary source code to use run the simulation of the bot executing a navigation task.
+This repository provides the source code to simulate a bot executing an 8-Maze navigation task using Echo State Network (ESN) predictions. During navigation, it is possible to analyze the internal neurons of the model, particularly focusing on hippocampal cells such as place cells, head-direction cells, and splitter cells.
+
 
 ### Dependencies
 
-[reservoirpy](https://reservoirpy.readthedocs.io/en/latest/index.html)
+-  *numpy*, *scipy*, *sklearn*, *matplotlib*
+- *umap*
+- *optuna* 
+- [reservoirpy](https://reservoirpy.readthedocs.io/en/latest/index.html)
 
 
+This repository allows to:
+- Run the simulation in different configurations (data-driven, esn-driven, braitenberg-driven), and record the reservoir states during the navigation task  (supporting two types of navigation tasks).
+- Analyze reservoir activity using two methods: single-cell analysis and population-level analysis.
 
 ### Run the navigation task
 
-Main script to run:
+To run the navigation task, execute the main script:
 
 ```Bash
 python main.py
 ```
 
-Before running the script, certain configurations are required to be set at the begginning of the : ```main.py``` script:
-
+Before running the script, ensure to set certain configurations at the beginning of ```main.py```:
 
 - ```task``` :   
         1) 'R-L' (alternation task)    
@@ -41,13 +47,14 @@ Before running the script, certain configurations are required to be set at the 
 
 
 #### Single-cell analysis
+To conduct single-cell analysis, use the following command:
 
 ```Bash
 python analysis/single_cell_analysis.py
 ```
 
 #### Population-level analysis
-
+For population-level analysis, run:
 ```Bash
 python analysis/population_analysis.py
 ```
