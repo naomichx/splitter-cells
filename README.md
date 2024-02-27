@@ -30,6 +30,8 @@ Before running the script, ensure to set certain configurations at the beginning
         1) 'R-L' (alternation task)    
         2) 'RR-LL' (half-alternation task)   
 
+- ```cues```:   set to True if the model includes contextual cues as input.
+
 - ```simulation_mode```:   
                 1) ```'walls'```: the bot navigates and takes direction automatically using Braitenberg algorithms.    
                             Walls are added to guide the bot in the right direction.
@@ -42,6 +44,8 @@ Before running the script, ensure to set certain configurations at the beginning
 - ```path_to_save```: folder to save.  
 
 
+
+**Comments**: the sensors of the bot vary in size depending on the task. Specifically, for the 'RR-LL' task, the sensors are larger compared to the 'R-L' task. 
 
 ### Run the analysis
 

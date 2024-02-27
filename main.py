@@ -27,7 +27,7 @@ import numpy as np
 
 
 task = 'RR-LL' #'RR-LL', 'R-L'
-simulation_mode = "walls"  # data, walls, esn
+simulation_mode = "esn"  # data, walls, esn
 cues = False
 save_reservoir_states = False
 save_bot_states = False
