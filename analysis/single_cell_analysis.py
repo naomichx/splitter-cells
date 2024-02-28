@@ -19,6 +19,8 @@ import matplotlib.pyplot as plt
 from matplotlib.lines import Line2D
 import matplotlib.gridspec as gridspec
 from sklearn.preprocessing import MinMaxScaler
+import pandas as pd
+import seaborn as sns
 plt.rc('font', size=12)
 
 
@@ -652,13 +654,75 @@ def plot_splitter_cells_during_error_trial():
 
 
 
+def plot_RSA_matrix(cues=False):
+    """
+    This function allows to compute representational similarity analysis (RSA)
+    of the internal activity of the reservoir for different trajectories. The metrics is
+    the correlation between internal states.
+    """
+
+    if cues:
+        path = "../data/RR-LL/cues/reservoir_states/"
+    else:
+        path = "../data/RR-LL/no_cues/reservoir_states/"
+
+    # Load reservoir states
+    reservoir_states = np.load(path + 'reservoir_states_corridor.npy', allow_pickle=True).item()
+
+    mean_activities = {}
+
+    for trajectory in ('RL', 'LR', 'RR', 'LL'):
+        mean_activities[trajectory] = []
+        for i in range(10):
+            mean_activities[trajectory].append(np.mean(reservoir_states[trajectory][i], axis=0))
+        mean_activities[trajectory] = np.array(mean_activities[trajectory])
+        print(np.shape(mean_activities[trajectory][0]))
+
+    splitter_cells = find_splitter_cells(mean_activities['LR'][0], mean_activities['RL'][0], 0.1)
+    print(splitter_cells)
+
+    splitter_cells = [38, 312, 498]
+
+    n_neurons = 3
+
+    #n_neurons = 10
+
+
+    fig, ax = plt.subplots(1,n_neurons,figsize=(3*n_neurons, 5))
+
+    for i in range(n_neurons):
+        neuron = splitter_cells[i]
+        my_dict = {}
+        my_dict["RL->L"] = mean_activities['LL'][:, neuron]
+        my_dict["LL->R"] = mean_activities['LR'][:, neuron]
+        my_dict["RR->L"] = mean_activities['RL'][:, neuron]
+        my_dict["LR->R"] = mean_activities['RR'][:, neuron]
+
+
+        df = pd.DataFrame(my_dict)
+
+        print(df)
+        corr_matrix = abs(df.corr())
+        print(corr_matrix)
+
+        mask = np.triu(np.ones_like(corr_matrix, dtype=bool))
+        sns.heatmap(corr_matrix, annot=True, vmax=1, vmin=-0., center=0,  mask=mask, ax=ax[i],cbar=i==2)
+
+        ax[i].set_title('Neuron {}'.format(neuron))
+    fig.suptitle('Ensemble representational similarity')
+    plt.tight_layout()
+    plt.show()
+
+
+
 if __name__ == '__main__':
-    raster_plot()
-    plot_head_direction_cells()
-    plot_hippocampal_cells()
-    plot_splitter_cells_activity()
-    plot_splitter_cells_count()
-    plot_splitter_cells_during_error_trial()
+    #raster_plot()
+    #plot_head_direction_cells()
+    #plot_hippocampal_cells()
+    #plot_splitter_cells_activity()
+    #plot_splitter_cells_count()
+    #plot_splitter_cells_during_error_trial()
+    plot_RSA_matrix(cues=False)
 
 
 

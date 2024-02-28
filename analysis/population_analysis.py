@@ -377,7 +377,7 @@ def gather_reservoir_states_central_corridor(cues=False):
     return reservoir_states_corridor
 
 
-def plot_UMAP(cues=False):
+def plot_UMAP(cues=False, n_neighbors=5):
     """
         Plot UMAP (Uniform Manifold Approximation and Projection) visualization of reservoir states.
 
@@ -410,7 +410,7 @@ def plot_UMAP(cues=False):
                                  reservoir_states['LL'], reservoir_states['RL'])).reshape((-1, 1000))
 
     # UMAP embedding
-    reducer = umap.UMAP(n_neighbors=5)
+    reducer = umap.UMAP(n_neighbors=n_neighbors)
     embedding = reducer.fit_transform(all_states)
 
     # Create labels and values for coloring
@@ -483,12 +483,22 @@ def plot_UMAP_error_case():
     plt.show()
 
 
+
+
+
+
+
+
+
+
+
 if __name__ == '__main__':
-    plot_PCA_3D()
+    #plot_PCA_3D()
     plot_PCA_3D_with_distance()
-    plot_SVM_predictions()
-    plot_UMAP()
-    plot_UMAP_error_case()
+    #plot_SVM_predictions()
+    #plot_UMAP(cues=False, n_neighbors=5)
+    #plot_UMAP_error_case()
+
 
 
 
