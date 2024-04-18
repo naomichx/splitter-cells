@@ -242,7 +242,7 @@ def plot_activity(ax, to_plot, act_1, act_2, act_3, label_1, label_2, label_3, t
     x = np.arange(len(to_plot))
     ax.bar(x, act_1[to_plot], width, color=colors[label_1], label=label_1)
     ax.bar(x - 0.3, act_2[to_plot], width, color=colors[label_2], label=label_2)
-    ax.bar(x + 0.3, act_3[to_plot], width, color=colors[label_3], label=label_3, alpha=0.5)
+    ax.bar(x + 0.3, act_3[to_plot], width, color=colors[label_3], label=label_3)#, alpha=0.5)
 
     ax.set_xticks(x, to_plot)
     ax.set_title(title)
@@ -251,44 +251,6 @@ def plot_activity(ax, to_plot, act_1, act_2, act_3, label_1, label_2, label_3, t
 
     plt.tight_layout()
     return
-
-
-def plot_place_cells(axes, place_cells, line, res_activity, positions):
-    """This function plots the activity of place cells during the 8-trajectory, where each subplot
-        represents the activity of a specific place cell.
-
-        Args:
-        axes (list): List of matplotlib axes objects to draw the subplots on.
-        place_cells (list): List of indices corresponding to place cells.
-        line (int): Determines the position of the X-axis label.
-                    - 1: X-axis label is shown only on the last subplot.
-                    - 2: X-axis label is shown on all subplots.
-        res_activity (numpy.ndarray): Array containing reservoir activity data.
-        positions (numpy.ndarray): Array containing position data.
-
-        Returns:
-        matplotlib.collections.PathCollection: Scatter plot of place cell activity.
-        """
-    assert len(axes) == len(place_cells)
-    start = 364
-    end = 1089
-    # end = 12000
-    x = positions[start:end:, 0]
-    y = positions[start:end:, 1]
-    cmap = plt.get_cmap('coolwarm')
-    for i in range(len(place_cells)):
-        z = res_activity[start:end, place_cells[i]]
-        scat = axes[i].scatter(x, y, c=z, s=200, cmap=cmap, linewidth=0.1, alpha=0.5)
-        axes[i].set_title('Neuron {}'.format(place_cells[i]), fontsize=14)
-        if line == 2:
-            axes[i].set_xlabel('X', fontsize=14)
-        axes[i].margins(0.05)
-        axes[i].set_yticks([])
-        axes[i].set_xticks([])
-        axes[i].set_facecolor('#f0f0f0')
-        axes[i].tick_params(axis='both', which='major', labelsize=12)
-    axes[0].set_ylabel('Y', fontsize=14)
-    return scat
 
 
 def homogenous_poisson(rate, tmax, bin_size):
@@ -348,14 +310,14 @@ def plot_splitter_cells_count():
     splitter_nc = [pro_nc * 100 / (pro_nc + retro_nc), retro_nc * 100 / (pro_nc + retro_nc)]
     splitter_c = [pro_c * 100 / (pro_c + retro_c), retro_c * 100 / (pro_c + retro_c)]
 
-    ax1.pie(splitter_nc,  colors=['cornflowerblue','tomato'],autopct='%1.1f%%', startangle=90)
-    ax2.pie(splitter_c,  colors=['cornflowerblue','tomato'],autopct='%1.1f%%', startangle=90)
+    ax1.pie(splitter_nc,  colors=['cornflowerblue', 'tomato'], autopct='%1.1f%%', startangle=90)
+    ax2.pie(splitter_c,  colors=['cornflowerblue', 'tomato'], autopct='%1.1f%%', startangle=90)
     ax2.set_title('Model with cues')
     ax1.set_title('Model without cues')
 
     custom_lines = [Line2D([0], [0], color='cornflowerblue', lw=4),
                     Line2D([0], [0], color='tomato', lw=4)]
-    plt.legend(custom_lines, ['Retrospective', 'Prospective'], bbox_to_anchor=(1, 1.01))
+    plt.legend(custom_lines, ['Prospective', 'Retrospective'], bbox_to_anchor=(1, 1.01))
     fig.tight_layout()
     plt.show()
 
@@ -371,12 +333,14 @@ def plot_splitter_cells_activity():
     path = "../data/RR-LL/no_cues/reservoir_states/"
     res_activity = load_reservoir_states(path)
     activity_ranges = get_activity_ranges(path)
+    index_range = 2
+
     mean_activities = {}
     for trajectory in ('RL', 'LR', 'RR', 'LL'):
-        mean_activities[trajectory] = get_average_activity(activity_ranges[trajectory][2], res_activity)
+        mean_activities[trajectory] = get_average_activity(activity_ranges[trajectory][index_range], res_activity)
 
-    mean_activities['l_loop'] = get_average_activity(activity_ranges['l_loop'][2], res_activity)
-    mean_activities['r_loop'] = get_average_activity(activity_ranges['r_loop'][2], res_activity)
+    mean_activities['l_loop'] = get_average_activity(activity_ranges['l_loop'][index_range], res_activity)
+    mean_activities['r_loop'] = get_average_activity(activity_ranges['r_loop'][index_range], res_activity)
     mean_activities['outside_corridor'] = (mean_activities['l_loop'] + mean_activities['r_loop']) / 2
 
     # Take the 6th neurons related to the biggest SI
@@ -419,13 +383,121 @@ def plot_splitter_cells_activity():
     plt.show()
 
 
-def plot_hippocampal_cells():
+def splitter_cells_activity_compare_level_of_training():
+    """
+    This function visualizes the activity of splitter, retrospective, and prospective cells
+        based on their mean activities in different trajectories within the central corridor.
+
+        Returns:
+        None
+        """
+    path = "../data/R-L_60/cues/reservoir_states/"
+    res_activity = load_reservoir_states(path)
+    activity_ranges = get_activity_ranges(path)
+    index_range = 0
+
+    mean_activities_1 = {}
+    for trajectory in ('RL', 'LR'):
+        mean_activities_1[trajectory] = get_average_activity(activity_ranges[trajectory][index_range], res_activity)
+
+    mean_activities_1['l_loop'] = get_average_activity(activity_ranges['l_loop'][index_range], res_activity)
+    mean_activities_1['r_loop'] = get_average_activity(activity_ranges['r_loop'][index_range], res_activity)
+    mean_activities_1['outside_corridor'] = (mean_activities_1['l_loop'] + mean_activities_1['r_loop']) / 2
+
+    # Take the 6th neurons related to the biggest SI
+    splitter_1 = find_splitter_cells(mean_activities_1['RL'], mean_activities_1['LR'], 0.1)
+    print(len(splitter_1))
+
+    path = "../data/R-L_60/cues/reservoir_states_under_trained/"
+    res_activity = load_reservoir_states(path)
+    activity_ranges = get_activity_ranges(path)
+    mean_activities_2 = {}
+    for trajectory in ('RL', 'LR'):
+        mean_activities_2[trajectory] = get_average_activity(activity_ranges[trajectory][index_range], res_activity)
+
+    mean_activities_2['l_loop'] = get_average_activity(activity_ranges['l_loop'][index_range], res_activity)
+    mean_activities_2['r_loop'] = get_average_activity(activity_ranges['r_loop'][index_range], res_activity)
+    mean_activities_2['outside_corridor'] = (mean_activities_2['l_loop'] + mean_activities_2['r_loop']) / 2
+
+    splitter_2 = find_splitter_cells(mean_activities_2['RL'], mean_activities_2['LR'], 0.1)
+
+    colors = {}
+    colors['R-L'] = 'C0'
+    colors['L-L'] = 'C7'
+    colors['L-R'] = 'C3'
+    colors['R-R'] = 'C7'
+    colors['outside corridor'] = 'darkgreen'
+
+    custom_lines = [Line2D([0], [0], color=colors['R-L'], lw=4),
+                    Line2D([0], [0], color=colors['L-R'], lw=4),
+                    Line2D([0], [0], color=colors['L-L'], lw=4),
+                    Line2D([0], [0], color='darkgreen', lw=4), ]
+
+    # Create 2x2 sub plots
+    fig, ax = plt.subplots(2, 1, figsize=(10, 6))
+
+    difference_1 = [abs(lr - rl) for lr, rl in zip(mean_activities_1['LR'], mean_activities_1['RL'])]
+    difference_2 = [abs(lr - rl) for lr, rl in zip(mean_activities_2['LR'], mean_activities_2['RL'])]
+
+    all = []
+    for split in splitter_1:
+        #print((difference_1[split]-difference_2[split])*100/difference_1[split], '%')
+        all.append((difference_1[split]-difference_2[split])*100/difference_1[split])
+
+    plot_activity(ax[0], splitter_1[:10], mean_activities_1['LR'], mean_activities_1['RL'],
+                  mean_activities_1['outside_corridor'], label_1='L-R', label_2='R-L', label_3='outside corridor',
+                  title='Splitter cells over trained', colors=colors)
+
+    plot_activity(ax[1], splitter_1[:10], mean_activities_2['LR'], mean_activities_2['RL'],
+                  mean_activities_2['outside_corridor'], label_1='L-R', label_2='R-L', label_3='outside corridor',
+                  title='Splitter cells under-trained', colors=colors)
+    plt.legend(custom_lines, ['R-L', 'L-R', 'L-L', 'Outside corridor'], bbox_to_anchor=(1, 1.01))
+
+    plt.tight_layout()
+    plt.show()
+
+def plot_hippocampal_cells_9():
     """This function visualizes the activity of hippocampal cells in different regions
         including loop cells, corner cells, and place cells.
 
         Returns:
         None
         """
+
+    def plot_place_cells(axes, place_cells, line, res_activity, positions, start_path, end_path):
+        """This function plots the activity of place cells during the 8-trajectory, where each subplot
+            represents the activity of a specific place cell.
+
+            Args:
+            axes (list): List of matplotlib axes objects to draw the subplots on.
+            place_cells (list): List of indices corresponding to place cells.
+            line (int): Determines the position of the X-axis label.
+                        - 1: X-axis label is shown only on the last subplot.
+                        - 2: X-axis label is shown on all subplots.
+            res_activity (numpy.ndarray): Array containing reservoir activity data.
+            positions (numpy.ndarray): Array containing position data.
+
+            Returns:
+            matplotlib.collections.PathCollection: Scatter plot of place cell activity.
+            """
+        assert len(axes) == len(place_cells)
+
+        x = positions[start_path:end_path:, 0]
+        y = positions[start_path:end_path:, 1]
+        cmap = plt.get_cmap('coolwarm')
+        for i in range(len(place_cells)):
+            z = res_activity[start_path:end_path, place_cells[i]]
+            scat = axes[i].scatter(x, y, c=z, s=200, cmap=cmap, linewidth=0.1, alpha=0.5)
+            axes[i].set_title('Neuron {}'.format(place_cells[i]), fontsize=14)
+            if line == 2:
+                axes[i].set_xlabel('X', fontsize=14)
+            axes[i].margins(0.05)
+            axes[i].set_yticks([])
+            axes[i].set_xticks([])
+            axes[i].set_facecolor('#f0f0f0')
+            axes[i].tick_params(axis='both', which='major', labelsize=12)
+        axes[0].set_ylabel('Y', fontsize=14)
+        return scat
 
 
     def create_subtitle(fig, grid, title):
@@ -448,13 +520,17 @@ def plot_hippocampal_cells():
     corner_cells = [550, 305, 257]
     place_cells = [70, 186, 196]
     all_cells = [loop_cells, corner_cells, place_cells]
+    start_path = 364
+    end_path = 1089
+
 
     for i in range(3):
         axes = []
         for j in range(3):
             axes.append(fig.add_subplot(grid[i, j]))
         scat = plot_place_cells(axes=axes, place_cells=all_cells[i],line=i,
-                                res_activity=res_activity,positions= positions)
+                                res_activity=res_activity, positions=positions,
+                                start_path=start_path, end_path=end_path)
 
     create_subtitle(fig, grid[0, ::], 'Loop cells')
     create_subtitle(fig, grid[1, ::], 'Corner cells')
@@ -469,6 +545,75 @@ def plot_hippocampal_cells():
 
     cb.set_label('Activity Level', fontsize=14)
     cb.solids.set_alpha(1)
+    plt.show()
+
+
+
+
+def plot_hippocampal_cells_3():
+    """This function visualizes the activity of hippocampal cells for neurons 196, 257, and 383.
+
+    Returns:
+    None
+    """
+
+    def plot_place_cells(ax, place_cells, line, res_activity, positions, start_path, end_path):
+        x = positions[start_path:end_path, 0]
+        y = positions[start_path:end_path, 1]
+        cmap = plt.get_cmap('coolwarm')
+
+        z = res_activity[start_path:end_path, place_cells]
+        scat = ax.scatter(x, y, c=z, s=200, cmap=cmap, linewidth=0.1, alpha=0.5)
+
+        ax.set_title('Neuron {}'.format(place_cells), fontsize=14)
+
+        if line == 2:
+            ax.set_xlabel('X', fontsize=14)
+
+        ax.set_ylabel('Y', fontsize=14)
+        ax.margins(0.05)
+        ax.set_yticks([])
+        ax.set_xticks([])
+        ax.set_facecolor('#f0f0f0')
+        ax.tick_params(axis='both', which='major', labelsize=12)
+
+        return scat
+    fig, axes = plt.subplots(1, 3, figsize=(12, 4))  # Increased figure width
+    path = "../data/RR-LL/no_cues/reservoir_states/"
+    positions = load_positions(path)
+    res_activity = load_reservoir_states(path)
+
+    neurons = [196, 257, 383]
+    start_path = 364
+    end_path = 1089
+
+    for ax, neuron in zip(axes, neurons):
+        plot_place_cells(ax=ax, place_cells=neuron, line=2,
+                         res_activity=res_activity, positions=positions,
+                         start_path=start_path, end_path=end_path)
+
+    axes[0].set_title('Place cells')
+    axes[1].set_title('Corner cells')
+    axes[2].set_title('Loop cells')
+
+    cbar_ax = fig.add_axes([0.87, 0.15, 0.02, 0.7])  # [left, bottom, width, height]
+    cb = plt.colorbar(ax.collections[0], cax=cbar_ax)
+    cb.set_label('Activity level', fontsize=12, rotation=90,
+                 labelpad=5)  # Set label at the top with horizontal orientation
+    cb.ax.tick_params(labelsize=10)
+
+    # Define custom ticks and labels
+    ticks = [np.min(ax.collections[0].get_array()),
+             (np.max(ax.collections[0].get_array()) + np.min(ax.collections[0].get_array())) / 2,
+             np.max(ax.collections[0].get_array())]
+    tick_labels = ['min', 'medium', 'max']
+    cb.set_ticks(ticks)
+    cb.set_ticklabels(tick_labels)
+
+    cb.solids.set_alpha(1)
+
+    plt.tight_layout()
+    plt.subplots_adjust(right=0.85)
     plt.show()
 
 
@@ -676,19 +821,14 @@ def plot_RSA_matrix(cues=False):
         for i in range(10):
             mean_activities[trajectory].append(np.mean(reservoir_states[trajectory][i], axis=0))
         mean_activities[trajectory] = np.array(mean_activities[trajectory])
-        print(np.shape(mean_activities[trajectory][0]))
 
     splitter_cells = find_splitter_cells(mean_activities['LR'][0], mean_activities['RL'][0], 0.1)
-    print(splitter_cells)
 
     splitter_cells = [38, 312, 498]
 
     n_neurons = 3
 
-    #n_neurons = 10
-
-
-    fig, ax = plt.subplots(1,n_neurons,figsize=(3*n_neurons, 5))
+    fig, ax = plt.subplots(1, n_neurons, figsize=(3*n_neurons, 5))
 
     for i in range(n_neurons):
         neuron = splitter_cells[i]
@@ -698,13 +838,8 @@ def plot_RSA_matrix(cues=False):
         my_dict["RR->L"] = mean_activities['RL'][:, neuron]
         my_dict["LR->R"] = mean_activities['RR'][:, neuron]
 
-
         df = pd.DataFrame(my_dict)
-
-        print(df)
         corr_matrix = abs(df.corr())
-        print(corr_matrix)
-
         mask = np.triu(np.ones_like(corr_matrix, dtype=bool))
         sns.heatmap(corr_matrix, annot=True, vmax=1, vmin=-0., center=0,  mask=mask, ax=ax[i],cbar=i==2)
 
@@ -718,11 +853,12 @@ def plot_RSA_matrix(cues=False):
 if __name__ == '__main__':
     #raster_plot()
     #plot_head_direction_cells()
-    #plot_hippocampal_cells()
-    #plot_splitter_cells_activity()
+    plot_hippocampal_cells_3()
     #plot_splitter_cells_count()
     #plot_splitter_cells_during_error_trial()
-    plot_RSA_matrix(cues=False)
+    #plot_RSA_matrix(cues=False)
+    #test()
+    #plot_splitter_cells_activity()
 
 
 

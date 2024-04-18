@@ -30,6 +30,7 @@ from scipy.spatial import distance
 from matplotlib.collections import LineCollection
 from matplotlib.colors import ListedColormap, BoundaryNorm
 from matplotlib.lines import Line2D
+import umap
 import umap.plot
 plt.rc('font', size=12)
 
