@@ -31,7 +31,7 @@ from matplotlib.collections import LineCollection
 from matplotlib.colors import ListedColormap, BoundaryNorm
 from matplotlib.lines import Line2D
 import umap
-import umap.plot
+#import umap.plot
 plt.rc('font', size=12)
 
 
@@ -419,13 +419,13 @@ def plot_UMAP(cues=False, n_neighbors=5):
               'LL ({})'.format(n_LL), 'RL ({})'.format(n_RL)]
     values = np.repeat([0, 1, 2, 3], [n_RR * 100, n_LR * 100, n_LL * 100, n_RL * 100])
 
-    # Define colormap
-    col_traj = {'LL': 'grey', 'RL': 'blue', 'RR': 'green', 'LR': 'red'}
+    #col_traj = {'LL': 'grey', 'RL': 'blue', 'RR': 'green', 'LR': 'red'}
+    col_traj = {'LL': 'C7', 'RL': 'C0', 'RR': 'green', 'LR': 'C3'}
     colours = ListedColormap([col_traj['RR'], col_traj['LR'], col_traj['LL'], col_traj['RL']])
 
     # Plot
     plt.figure(figsize=(10, 6))
-    scatter = plt.scatter(embedding[:, 0], embedding[:, 1], c=values, cmap=colours, alpha=0.8, s=2)
+    scatter = plt.scatter(embedding[:, 0], embedding[:, 1], c=values, cmap=colours, alpha=1, s=2)
     plt.legend(handles=scatter.legend_elements()[0], labels=labels)
     plt.title("UMAP of the bot's internal state in the central corridor")
     plt.xlabel("UMAP Dimension 1")
@@ -495,9 +495,9 @@ def plot_UMAP_error_case():
 
 if __name__ == '__main__':
     #plot_PCA_3D()
-    plot_PCA_3D_with_distance()
+    #plot_PCA_3D_with_distance()
     #plot_SVM_predictions()
-    #plot_UMAP(cues=False, n_neighbors=5)
+    plot_UMAP(cues=False, n_neighbors=5)
     #plot_UMAP_error_case()
 
 

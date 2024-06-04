@@ -147,7 +147,7 @@ class Bot:
 
         # Update head
         head_verts = np.array([self.position, self.position + self.size * np.array([np.cos(self.orientation),
-                                                                                    np.sin(self.orientation)])])
+                                                                                    np.sin(self.orientation)]).reshape(2,)])
         head.set_verts(np.expand_dims(head_verts, axis=0))
 
 

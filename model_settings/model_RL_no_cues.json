@@ -8,6 +8,6 @@
 "input_connectivity": 0.09,
 "connectivity": 0.19,
 "noise_rc":0,
-"warmup":800,
-"nb_train": 8000
+"warmup":0,
+"nb_train": 1
 }

@@ -298,7 +298,7 @@ def plot_splitter_cells_count():
         mean_activities_c[trajectory] = get_average_activity(activity_ranges_c[trajectory][1], res_activity_c)
 
     fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(8, 5))
-    fig.suptitle('Proportion of prospective and retrospective cells')
+    #fig.suptitle('Proportion of prospective and retrospective cells')
 
     # Compute the prospective cells and splitter cells
     pro_nc = len(find_splitter_cells(mean_activities_nc['RL'], mean_activities_nc['RR'], 0.1))
@@ -310,13 +310,13 @@ def plot_splitter_cells_count():
     splitter_nc = [pro_nc * 100 / (pro_nc + retro_nc), retro_nc * 100 / (pro_nc + retro_nc)]
     splitter_c = [pro_c * 100 / (pro_c + retro_c), retro_c * 100 / (pro_c + retro_c)]
 
-    ax1.pie(splitter_nc,  colors=['cornflowerblue', 'tomato'], autopct='%1.1f%%', startangle=90)
-    ax2.pie(splitter_c,  colors=['cornflowerblue', 'tomato'], autopct='%1.1f%%', startangle=90)
+    ax1.pie(splitter_nc,  colors=['C1', 'C5'], autopct='%1.1f%%', startangle=90)
+    ax2.pie(splitter_c,  colors=['C1', 'C5'], autopct='%1.1f%%', startangle=90)
     ax2.set_title('Model with cues')
     ax1.set_title('Model without cues')
 
-    custom_lines = [Line2D([0], [0], color='cornflowerblue', lw=4),
-                    Line2D([0], [0], color='tomato', lw=4)]
+    custom_lines = [Line2D([0], [0], color='C1', lw=4),
+                    Line2D([0], [0], color='C5', lw=4)]
     plt.legend(custom_lines, ['Prospective', 'Retrospective'], bbox_to_anchor=(1, 1.01))
     fig.tight_layout()
     plt.show()
@@ -783,9 +783,10 @@ def plot_splitter_cells_during_error_trial():
     # Create 2x2 sub plots
     fig, ax = plt.subplots(figsize=(8, 5))
 
+
     colors = {}
-    colors['R-L'] = 'b'
-    colors['error: RR instead of LL'] = 'yellow'
+    colors['R-L'] = 'C0'
+    colors['error: RR instead of LL'] = 'gold'
     colors['R-R'] = 'green'
 
     plot_activity(ax, splitter_cells, mean_activities['RL'], mean_activities['RR'],
@@ -833,10 +834,10 @@ def plot_RSA_matrix(cues=False):
     for i in range(n_neurons):
         neuron = splitter_cells[i]
         my_dict = {}
-        my_dict["RL->L"] = mean_activities['LL'][:, neuron]
-        my_dict["LL->R"] = mean_activities['LR'][:, neuron]
-        my_dict["RR->L"] = mean_activities['RL'][:, neuron]
-        my_dict["LR->R"] = mean_activities['RR'][:, neuron]
+        my_dict["RL \u2192 L"] = mean_activities['LL'][:, neuron]
+        my_dict["LL \u2192 R"] = mean_activities['LR'][:, neuron]
+        my_dict["RR \u2192 L"] = mean_activities['RL'][:, neuron]
+        my_dict["LR \u2192 R"] = mean_activities['RR'][:, neuron]
 
         df = pd.DataFrame(my_dict)
         corr_matrix = abs(df.corr())
@@ -853,8 +854,8 @@ def plot_RSA_matrix(cues=False):
 if __name__ == '__main__':
     #raster_plot()
     #plot_head_direction_cells()
-    plot_hippocampal_cells_3()
-    #plot_splitter_cells_count()
+    #plot_hippocampal_cells_3()
+    plot_splitter_cells_count()
     #plot_splitter_cells_during_error_trial()
     #plot_RSA_matrix(cues=False)
     #test()

@@ -27,11 +27,11 @@ import numpy as np
 
 
 task = 'RR-LL' #'RR-LL', 'R-L'
-simulation_mode = "esn"  # data, walls, esn
+simulation_mode = "data"  # data, walls, esn
 cues = False
 save_reservoir_states = False
 save_bot_states = False
-path_to_save = '/Users/nchaix/Documents/PhD/code/splitter_cells/data/R-L_60/no_cues/reservoir_states/'
+path_to_save = '/Users/nchaix/Documents/PhD/code/splitter_cells/data/R-L_60/cues/reservoir_states'
 
 
 if __name__ == '__main__':
@@ -51,6 +51,7 @@ if __name__ == '__main__':
         else:
             model_file = "model_settings/model_RR-LL_no_cues.json"
             data_folder = "data/RR-LL/no_cues/"
+            data_folder = "data/RR-LL/no_cues/error_case/"
     else:
         raise Exception("Task name {}".format(task) + " is not recognized.")
 
@@ -78,6 +79,6 @@ if __name__ == '__main__':
             np.save(path_to_save + 'input.npy', exp.bot.all_sensors_vals)
 
     if save_reservoir_states:
-        np.save(path_to_save + 'reservoir_states_2.npy', exp.model.reservoir_states)
+        np.save(path_to_save + 'reservoir_states.npy', exp.model.reservoir_states)
 
 

@@ -49,9 +49,7 @@ class Model:
         warmup = _['warmup']
         seed = _['seed']
 
-
-
-        input = np.load(data_folder + 'input.npy')
+        self.input = np.load(data_folder + 'input.npy')
         output = np.load(data_folder + 'output.npy')
         output = output.reshape(len(output), 1)
         self.positions = np.load(data_folder + 'positions.npy')
@@ -64,9 +62,10 @@ class Model:
         self.reservoir = Reservoir(units, input_scaling=input_scaling, sr=spectral_radius,
                                   lr=leak_rate, rc_connectivity=connectivity,
                                   input_connectivity=input_connectivity, seed=seed, noise_rc=noise_rc)
+
         readout = Ridge(1, ridge=regularization)
         self.esn = self.reservoir >> readout
-        X_train, Y_train, X_test, Y_test = split_train_test(input, output, self.nb_train)
+        X_train, Y_train, X_test, Y_test = split_train_test(self.input, output, self.nb_train)
 
         self.esn.fit(X_train, Y_train, warmup=warmup)
         self.save_reservoir_states = save_reservoir_states
@@ -96,6 +95,12 @@ class Model:
             self.record_states()
 
         return output
+
+
+
+
+
+
 
 
 
